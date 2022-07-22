@@ -14,6 +14,9 @@ const StyledGameBoardCellContainer = styled('div')({
   alignItems: 'center'
 })
 
+/**
+ * A wrapper that puts nodes into a grid
+ */
 const GameBoardCellContainer = ({ coordinate, noBorder, children }: GameBoardCellContainerProps) => {
   console.debug('Rendering GameBoardCellContainer')
 

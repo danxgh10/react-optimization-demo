@@ -12,6 +12,9 @@ const StyledGameControlsPanel = styled('div')({
   marginBottom: 20
 })
 
+/**
+ * Controls panel
+ */
 const GameControlsPanel = ({ resetBoard }: GameControlsPanelProps) => {
   return (
     <StyledGameControlsPanel>

@@ -8,7 +8,7 @@ export interface GameBoardCellProps {
   coordinate: Coordinate
   hasShip: boolean
   disabled: boolean
-  handleClick: (coordinate: Coordinate) => void
+  handleAction: (coordinate: Coordinate) => void
 }
 
 type CellColours = 'secondary' | 'success' | 'error'
@@ -23,23 +23,27 @@ const StyledButton = styled(Button)({
   minHeight: CELL_SIZE
 })
 
-const GameBoardCell = ({ coordinate, hasShip, disabled, handleClick }: GameBoardCellProps) => {
+/**
+ * A single cell on the game board, representing either an unknown, ship or water coordinate.
+ */
+const GameBoardCell = ({ coordinate, hasShip, disabled, handleAction }: GameBoardCellProps) => {
   console.debug('Rendering GameBoardCell')
 
-  const handleClickWrapper = () => {
-    handleClick(coordinate)
+  const handleMouseOver = () => {
+    handleAction(coordinate)
   }
 
   let cellColour: CellColours = 'secondary'
 
   if (disabled) {
-    // Cell has been clicked, so if tere's a ship there use success colour.
+    // Cell has been activated, so if there's a ship there use success colour.
     cellColour = hasShip ? 'success' : 'error'
   }
 
   return (
     <GameBoardCellContainer coordinate={coordinate}>
-      <StyledButton variant='contained' disabled={disabled} color={cellColour} onClick={handleClickWrapper}></StyledButton>
+      { /** Using a MUI Button to intentially add a small amount of bloat to each cell */ }
+      <StyledButton variant='contained' disabled={disabled} color={cellColour} onMouseOver={handleMouseOver}></StyledButton>
     </GameBoardCellContainer>
   )
 }

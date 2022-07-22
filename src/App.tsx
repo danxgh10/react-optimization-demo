@@ -1,6 +1,5 @@
 import React from 'react'
 import { CssBaseline } from '@mui/material'
-import '@fontsource/basic'
 import { ThemeProvider, createTheme, ThemeOptions } from '@mui/material/styles'
 import GameContainer from './GameContainer'
 
@@ -28,7 +27,7 @@ const themeOptions: ThemeOptions = {
     },
   },
   typography: {
-    fontFamily: ['-apple-system', 'BlinkMacSystemFont', 'Basic', 'sans-serif'].join(','),
+    fontFamily: ['-apple-system', 'BlinkMacSystemFont', 'sans-serif'].join(','),
   },
 }
 

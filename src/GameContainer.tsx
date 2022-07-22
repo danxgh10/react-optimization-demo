@@ -9,6 +9,9 @@ const CenterStyled = styled('div')({
   flexDirection: 'column'
 })
 
+/**
+ * Main container for the game
+ */
 const GameContainer: React.FC = () => {
   return (
     <>
