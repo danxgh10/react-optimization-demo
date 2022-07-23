@@ -1,50 +1,46 @@
 import React from 'react'
-import { Button, styled } from '@mui/material'
-import GameBoardCellContainer from './GameBoardCellContainer'
-import { CELL_SIZE } from './util/GAME_CONFIG'
+import { styled } from '@mui/material'
+import { CELL_SIZE } from './settings'
 import Coordinate from './util/Coordinate'
+import useCellStyle from './util/useCellStyle'
+import { GameStateAction } from './util/useGameState'
 
 export interface GameBoardCellProps {
+  /** The coordinate of this cell */
   coordinate: Coordinate
+  /** Whether or not this cell has a ship on it */
   hasShip: boolean
-  disabled: boolean
-  handleAction: (coordinate: Coordinate) => void
+  /** Whether or not this cell has been revealed */
+  activated: boolean
+  /** A dispatch function to update the shared state.
+   * Note that this does NOT change between re renders,
+   * so it doesn't need to be in a useCallback call */
+  dispatchGameState: React.Dispatch<GameStateAction>
 }
 
-type CellColours = 'secondary' | 'success' | 'error'
-
-const StyledButton = styled(Button)({
+/** A styled div representing a single cell  */
+const StyledGameBoardCell = styled('div')({
   margin: 0,
+  border: '1px dashed black',
   padding: 0,
-  borderRadius: 0,
-  maxWidth: CELL_SIZE,
-  minWidth: CELL_SIZE,
-  maxHeight: CELL_SIZE,
-  minHeight: CELL_SIZE
+  width: CELL_SIZE,
+  height: CELL_SIZE
 })
 
 /**
  * A single cell on the game board, representing either an unknown, ship or water coordinate.
  */
-const GameBoardCell = ({ coordinate, hasShip, disabled, handleAction }: GameBoardCellProps) => {
+const GameBoardCell = ({ coordinate, hasShip, activated, dispatchGameState }: GameBoardCellProps) => {
   console.debug('Rendering GameBoardCell')
 
-  const handleMouseOver = () => {
-    handleAction(coordinate)
-  }
+  const style = useCellStyle(coordinate, hasShip, activated);
 
-  let cellColour: CellColours = 'secondary'
-
-  if (disabled) {
-    // Cell has been activated, so if there's a ship there use success colour.
-    cellColour = hasShip ? 'success' : 'error'
+  const onMouseOver = () => {
+    !activated && dispatchGameState(coordinate)
   }
 
   return (
-    <GameBoardCellContainer coordinate={coordinate}>
-      { /** Using a MUI Button to intentially add a small amount of bloat to each cell */ }
-      <StyledButton variant='contained' disabled={disabled} color={cellColour} onMouseOver={handleMouseOver}></StyledButton>
-    </GameBoardCellContainer>
+    <StyledGameBoardCell style={style} onMouseOver={onMouseOver} />
   )
 }
 

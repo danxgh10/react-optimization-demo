@@ -1,16 +1,28 @@
-import React, { useRef, useState } from 'react'
-import { styled, Typography } from '@mui/material'
-import GameBoardCell from './GameBoardCell';
-import { BOARD_SIZE } from './util/GAME_CONFIG';
-import generateShipCoordinates from './util/generateShipCoordinates';
-import Coordinate, { equals } from './util/Coordinate';
-import GameControlsPanel from './GameControlsPanel';
-import createInitialBoardState from './util/createInitialBoardState';
-import coordinateHasShip from './util/coordinateHasShip';
+import { styled } from '@mui/material'
+import React from 'react'
+import GameBoardCell from './GameBoardCell'
+import { BOARD_SIZE } from './settings'
+import Coordinate from './util/Coordinate'
+import coordinateHasShip from './util/coordinateHasShip'
+import createBoardCoordinates from './util/createBoardCoordinates'
+import { GameStateAction } from './util/useGameState'
 
+export interface GameBoardProps {
+  /** The activated/revealed state of each cell */
+  boardState: boolean[][]
+  /** The coordinates of the ship that the player is trying to find */
+  shipCoordinates: Coordinate[]
+  /** A dispatch function to update the shared state.
+   * Note that this does NOT change between re renders,
+   * so it doesn't need to be in a useCallback call */
+  dispatchGameState: React.Dispatch<GameStateAction>
+}
+
+/** The CSS gridTemplate to use for the game grid */
 const GRID_TEMPLATE = `repeat(${BOARD_SIZE}, ${100 / BOARD_SIZE}%)`
 
-const GameBoardContainer = styled('div')({
+/** A styled div for the game grid */
+const GameBoardGrid = styled('div')({
   display: 'inline-grid',
   gridTemplateColumns: GRID_TEMPLATE,
   gridTemplateRows: GRID_TEMPLATE,
@@ -18,78 +30,27 @@ const GameBoardContainer = styled('div')({
 })
 
 /**
- * The game board, containing controls and the actual game grid
+ * The game board, a grid containing cells
  */
-const GameBoard: React.FC = () => {
+const GameBoard = ({ boardState, shipCoordinates, dispatchGameState }: GameBoardProps) => {
   console.debug('Rendering GameBoard')
-  
-  const initialShipCoordinates = useRef(generateShipCoordinates())
-  const [remainingShipCoordinates, setRemainingShipCoordinates] = useState(initialShipCoordinates.current);
-  const [boardState, setboardState] = useState<boolean[][]>(createInitialBoardState())
-  
-  /**
-   * Handle mouseOver events for a given coordinate
-   */
-  const handleAction = (coordinate: Coordinate) => {
-    // Update board state
-    const cloneBoardState = [...boardState]
-    cloneBoardState[coordinate.x-1][coordinate.y-1] = true
-  
-    // Update ship state
-    if (coordinateHasShip(coordinate, remainingShipCoordinates)) {
-      const hitIndex = remainingShipCoordinates.findIndex(shipCoord => equals(shipCoord, coordinate))
 
-      const newRemainingShipCoordinates = [...remainingShipCoordinates]
-      newRemainingShipCoordinates.splice(hitIndex, 1)
-      setRemainingShipCoordinates(newRemainingShipCoordinates)
-    };
-
-    setboardState(cloneBoardState)
-  }
-
-  /**
-   * Reset the board and generate new ship coordinates
-   */
-  const resetBoard = () => {
-    setboardState(createInitialBoardState())
-
-    const newShipCoordinates = generateShipCoordinates()
-    initialShipCoordinates.current = newShipCoordinates
-    setRemainingShipCoordinates(newShipCoordinates)
-
-  }
-
-  const gameBoardCells = []
-
-  for (let x = 1; x <= BOARD_SIZE; x++) {
-    for (let y = 1; y <= BOARD_SIZE; y++) {
-      const coordinate: Coordinate = { x, y }
-      gameBoardCells.push(
-        <GameBoardCell
-          coordinate={coordinate}
-          disabled={boardState[x-1][y-1]}
-          hasShip={coordinateHasShip(coordinate, initialShipCoordinates.current)}
-          handleAction={handleAction}
-          key={`${x},${y}`}
-        />
-      )
-    }
-  }
+  const gameBoardCoordinates = createBoardCoordinates()
 
   return (
-    <>
-      <GameControlsPanel resetBoard={resetBoard} />
-      <GameBoardContainer>
-        {
-          gameBoardCells
-        }
-      </GameBoardContainer>
+    <GameBoardGrid>
       {
-        !remainingShipCoordinates.length && (
-          <Typography variant='h5'>You won!</Typography>
-        )
+        gameBoardCoordinates.map(coordinate => (
+          <GameBoardCell
+            coordinate={coordinate}
+            activated={boardState[coordinate.x-1][coordinate.y-1]}
+            hasShip={coordinateHasShip(coordinate, shipCoordinates)}
+            dispatchGameState={dispatchGameState}
+            key={`${coordinate.x},${coordinate.y}`}
+          />
+        ))
       }
-    </>
+    </GameBoardGrid>
   )
 }
 

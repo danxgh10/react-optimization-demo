@@ -1,5 +1,20 @@
-import { BOARD_SIZE, SHIP_SIZE } from './GAME_CONFIG'
+import { BOARD_SIZE, SHIP_SIZE } from '../settings'
 import Coordinate from './Coordinate'
+import { GameState } from './useGameState'
+
+/**
+ * Create a 2D array representing the cells of the board that have been triggered
+ */
+ export const createTriggeredCellsState = (triggered = false): boolean[][] => {
+  const state = []
+
+  for (let i = 0; i < BOARD_SIZE; i++) {
+    const boardRow = Array(BOARD_SIZE).fill(triggered)
+    state.push(boardRow)
+  }
+
+  return state
+};
 
 /**
  * Get a random int between 0 and max
@@ -35,4 +50,18 @@ const generateShipCoordinates = (): Array<Coordinate> => {
   return shipCoordinates
 }
 
-export default generateShipCoordinates
+/**
+ * Create and return the initial game state
+ */
+const createInitialGameState = (): GameState => {
+  console.debug('Creating an new game state')
+
+  const allShipCells = generateShipCoordinates()
+  return {
+    revealedCells: createTriggeredCellsState(),
+    remainingShipCells: allShipCells,
+    allShipCells
+  }
+}
+
+export default createInitialGameState
