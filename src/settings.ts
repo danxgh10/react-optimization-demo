@@ -10,3 +10,5 @@ export const SHIP_COLOR = '#d64045'
 export const WATER_COLOR = '#2671eb'
 /** The color representing clouds */
 export const CLOUD_COLOR = '#bbbbbb'
+/** The minimum time in milliseconds that the expensive component should take to execute */
+export const EXPENSIVE_COMPONENT_LOAD_TIME = 1

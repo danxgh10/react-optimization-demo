@@ -4,6 +4,7 @@ import { CELL_SIZE } from './settings'
 import Coordinate from './util/Coordinate'
 import useCellStyle from './util/useCellStyle'
 import { GameStateAction } from './util/useGameState'
+import ExpensiveComponent from './ExpensiveComponent'
 
 export interface GameBoardCellProps {
   /** The coordinate of this cell */
@@ -18,15 +19,6 @@ export interface GameBoardCellProps {
   dispatchGameState: React.Dispatch<GameStateAction>
 }
 
-/** A styled div representing a single cell  */
-const StyledGameBoardCell = styled('div')({
-  margin: 0,
-  border: '1px dashed black',
-  padding: 0,
-  width: CELL_SIZE,
-  height: CELL_SIZE
-})
-
 /**
  * A single cell on the game board, representing either an unknown, ship or water coordinate.
  */
@@ -40,7 +32,7 @@ const GameBoardCell = ({ coordinate, hasShip, activated, dispatchGameState }: Ga
   }
 
   return (
-    <StyledGameBoardCell style={style} onMouseOver={onMouseOver} />
+    <ExpensiveComponent style={style} onMouseOver={onMouseOver} />
   )
 }
 
