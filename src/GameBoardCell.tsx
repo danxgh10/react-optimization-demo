@@ -1,5 +1,5 @@
-import React from 'react'
-import Coordinate from './util/Coordinate'
+import React, { useCallback } from 'react'
+import Coordinate, { equals } from './util/Coordinate'
 import useCellStyle from './util/useCellStyle'
 import { GameStateAction } from './util/useGameState'
 import ExpensiveComponent from './ExpensiveComponent'
@@ -25,13 +25,19 @@ const GameBoardCell = ({ coordinate, hasShip, activated, dispatchGameState }: Ga
 
   const style = useCellStyle(coordinate, hasShip, activated);
 
-  const onMouseOver = () => {
+  const onMouseOver = useCallback(() => {
     !activated && dispatchGameState(coordinate)
-  }
+  }, [])
 
   return (
     <ExpensiveComponent style={style} onMouseOver={onMouseOver} />
   )
 }
 
-export default GameBoardCell
+const propsAreEqual = (oldProps: GameBoardCellProps, newProps: GameBoardCellProps) => {
+  return oldProps.activated === newProps.activated &&
+    oldProps.hasShip === newProps.hasShip &&
+    equals(oldProps.coordinate, newProps.coordinate)
+}
+
+export default React.memo(GameBoardCell, propsAreEqual)

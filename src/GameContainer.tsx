@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import GameBoard from './GameBoard'
 import GameControlsPanel from './GameControlsPanel'
 import useGameState, { DISPATCH_RESET, DISPATCH_REVEAL_ALL } from './util/useGameState'
@@ -23,16 +23,16 @@ const GameContainer = () => {
   /**
    * Reset the board and generate new ship coordinates
    */
-   const resetBoard = () => {
+   const resetBoard = useCallback(() => {
     dispatchGameState(DISPATCH_RESET)
-  }
+  }, [])
 
   /**
    * Handle the win dialog being closed
    */
-  const handleWinDialogClose = () => {
+  const handleWinDialogClose = useCallback(() => {
     dispatchGameState(DISPATCH_RESET)
-  }
+  }, [])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

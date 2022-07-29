@@ -35,4 +35,4 @@ const ExpensiveComponent = ({ style, onMouseOver }: ExpensiveComponentProps) => 
   )
 }
 
-export default ExpensiveComponent
+export default React.memo(ExpensiveComponent)
