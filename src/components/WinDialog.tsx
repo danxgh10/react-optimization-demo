@@ -14,6 +14,7 @@ const StyledContainer = styled('div')({
   display: 'flex',
   position: 'absolute',
   justifyContent: 'center',
+  alignItems: 'center',
   width: '100%',
   height: '100%'
 })
@@ -34,7 +35,7 @@ const WinDialog = ({ open, handleClose }: WinDialogProps) => {
     <>
       <Backdrop open={open} sx={{ zIndex: 100 }} onClick={handleClose}/>
       <StyledContainer>
-        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} style={{ position: 'sticky', justifySelf: 'center' }}>
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} style={{ position: 'fixed', justifySelf: 'center' }}>
           <Alert variant='filled' severity='success' elevation={0} action={SnackbarAction}>
             <b>You win!</b>
           </Alert>

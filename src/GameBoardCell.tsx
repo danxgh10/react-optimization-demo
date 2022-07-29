@@ -1,6 +1,4 @@
 import React from 'react'
-import { styled } from '@mui/material'
-import { CELL_SIZE } from './settings'
 import Coordinate from './util/Coordinate'
 import useCellStyle from './util/useCellStyle'
 import { GameStateAction } from './util/useGameState'
