@@ -54,4 +54,4 @@ const GameBoard = ({ boardState, shipCoordinates, dispatchGameState }: GameBoard
   )
 }
 
-export default GameBoard
+export default React.memo(GameBoard)

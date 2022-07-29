@@ -29,4 +29,4 @@ const GameControlsPanel = ({ resetBoard }: GameControlsPanelProps) => {
   )
 }
 
-export default GameControlsPanel
+export default React.memo(GameControlsPanel)
